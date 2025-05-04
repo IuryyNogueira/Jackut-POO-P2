@@ -28,6 +28,12 @@ public class Main {
         String[] argsUS4_1 = {"br.ufal.ic.p2.jackut.Facade", "tests/us4_1.txt"};
         String[] argsUS4_2 = {"br.ufal.ic.p2.jackut.Facade", "tests/us4_2.txt"};
 
+        String[] argsUS5_1 = {"br.ufal.ic.p2.jackut.Facade", "tests/us5_1.txt"};
+        String[] argsUS5_2 = {"br.ufal.ic.p2.jackut.Facade", "tests/us5_2.txt"};
+
+        String[] argsUS6_1 = {"br.ufal.ic.p2.jackut.Facade", "tests/us6_1.txt"};
+        String[] argsUS6_2 = {"br.ufal.ic.p2.jackut.Facade", "tests/us6_2.txt"};
+
         // Execução sequencial dos testes
         EasyAccept.main(argsUS1_1);  // Testes US1 - Criação de conta (casos básicos)
         EasyAccept.main(argsUS1_2);  // Testes US1 - Validação de persistência
@@ -37,5 +43,11 @@ public class Main {
         EasyAccept.main(argsUS3_2);  // Testes US3 - Validação de persistência
         EasyAccept.main(argsUS4_1);  // Testes US4 - Recados (operações básicas)
         EasyAccept.main(argsUS4_2);  // Testes US4 - Validação de persistência
+
+        EasyAccept.main(argsUS5_1);
+        EasyAccept.main(argsUS5_2);
+
+        EasyAccept.main(argsUS6_1);
+        EasyAccept.main(argsUS6_2);
     }
 }

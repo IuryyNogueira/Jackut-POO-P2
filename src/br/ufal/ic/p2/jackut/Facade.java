@@ -119,6 +119,38 @@ public class Facade {
         sistema.enviarRecado(idSessao, destinatario, mensagem);
     }
 
+
+    // Adicione estes métodos na classe Facade
+
+    /**
+     * Adiciona um usuário a uma comunidade
+     * @param sessao ID da sessão do usuário
+     * @param nome Nome da comunidade
+     * @throws ComunidadeNaoEncontradaException Se a comunidade não existir
+     * @throws UsuarioJaMembroException Se o usuário já for membro
+     */
+    public void adicionarComunidade(String sessao, String nome) {
+        sistema.adicionarComunidade(sessao, nome);
+    }
+
+    /**
+     * Lista as comunidades de um usuário
+     * @param login Login do usuário
+     * @return String formatada com lista de comunidades
+     */
+    public String getComunidades(String login) {
+        return sistema.getComunidades(login);
+    }
+
+    /**
+     * Lista membros de uma comunidade
+     * @param nome Nome da comunidade
+     * @return String formatada com lista de membros
+     */
+    public String getMembrosComunidade(String nome) {
+        return sistema.getMembrosComunidade(nome);
+    }
+
     /**
      * Lê o próximo recado não lido do usuário logado.
      *
@@ -130,6 +162,21 @@ public class Facade {
     public String lerRecado(String idSessao) {
         return sistema.lerRecado(idSessao);
     }
+
+
+    // Métodos para US5
+    public void criarComunidade(String sessao, String nome, String descricao) {
+        sistema.criarComunidade(sessao, nome, descricao);
+    }
+
+    public String getDescricaoComunidade(String nome) {
+        return sistema.getDescricaoComunidade(nome);
+    }
+
+    public String getDonoComunidade(String nome) {
+        return sistema.getDonoComunidade(nome);
+    }
+
 
     /**
      * Reinicia o sistema, removendo todos os usuários e sessões.

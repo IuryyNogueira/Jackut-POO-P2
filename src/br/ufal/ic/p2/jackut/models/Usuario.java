@@ -158,4 +158,16 @@ public class Usuario implements Serializable {
     public Map<String, ConviteStatus> getConvites() {
         return Collections.unmodifiableMap(convites);
     }
+
+    private LinkedHashSet<String> comunidades = new LinkedHashSet<>();
+
+    public void adicionarComunidade(String nomeComunidade) {
+        comunidades.add(nomeComunidade);
+    }
+
+    public Set<String> getComunidades() {
+        return Collections.unmodifiableSet(comunidades); // Ordem de inserção
+    }
+
+
 }

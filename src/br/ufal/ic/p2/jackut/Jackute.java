@@ -7,6 +7,9 @@ import java.io.*;
 
 /**
  * Classe principal do sistema Jackut que implementa toda a lógica de negócio e estado do sistema.
+ * <p>
+ * Gerencia usuários, sessões, relacionamentos, recados e comunidades.
+ * </p>
  *
  * @author IuryNogueira
  */
@@ -15,6 +18,16 @@ public class Jackute implements Serializable {
 
     private final GerenciadorUsuarios usuarios = new GerenciadorUsuarios();
     private final GerenciadorSessoes sessoes = new GerenciadorSessoes();
+    private GerenciadorComunidades comunidades = new GerenciadorComunidades();
+
+    /**
+     * Reinicia todo o sistema, limpando todos os dados armazenados.
+     */
+    public void zerar() {
+        usuarios.zerar();
+        sessoes.zerar();
+        comunidades.zerar();
+    }
 
     /**
      * Cria um novo usuário no sistema.
@@ -22,8 +35,8 @@ public class Jackute implements Serializable {
      * @param login Login único do usuário
      * @param senha Senha de acesso
      * @param nome Nome completo do usuário
-     * @throws LoginInvalidoException Se o login for inválido
-     * @throws SenhaInvalidaException Se a senha for inválida
+     * @throws LoginInvalidoException Se o login for inválido (vazio ou nulo)
+     * @throws SenhaInvalidaException Se a senha for inválida (vazia ou nula)
      * @throws UsuarioJaExisteException Se o login já estiver em uso
      */
     public void criarUsuario(String login, String senha, String nome) {
@@ -58,7 +71,7 @@ public class Jackute implements Serializable {
      * @param atributo Nome do atributo
      * @return Valor do atributo
      * @throws UsuarioNaoEncontradoException Se o usuário não existir
-     * @throws AtributoNaoPreenchidoException Se o atributo não existir
+     * @throws AtributoNaoPreenchidoException Se o atributo não existir no perfil
      */
     public String getAtributoUsuario(String login, String atributo) {
         return usuarios.getUsuario(login).getPerfil().getAtributo(atributo);
@@ -83,7 +96,7 @@ public class Jackute implements Serializable {
      * @param idSessao ID da sessão
      * @param amigoLogin Login do amigo
      * @throws AutoAmizadeException Se tentar adicionar a si mesmo
-     * @throws UsuarioNaoEncontradoException Se usuário não existir
+     * @throws UsuarioNaoEncontradoException Se o amigo não existir
      * @throws AmigoJaAdicionadoException Se já existir amizade ou convite
      */
     public void adicionarAmigo(String idSessao, String amigoLogin) {
@@ -92,11 +105,11 @@ public class Jackute implements Serializable {
     }
 
     /**
-     * Verifica se dois usuários são amigos.
+     * Verifica se dois usuários são amigos mútuos.
      *
      * @param login1 Primeiro usuário
      * @param login2 Segundo usuário
-     * @return true se forem amigos mútuos
+     * @return true se forem amigos mútuos, false caso contrário
      * @throws UsuarioNaoEncontradoException Se algum usuário não existir
      */
     public boolean ehAmigo(String login1, String login2) {
@@ -104,10 +117,10 @@ public class Jackute implements Serializable {
     }
 
     /**
-     * Lista os amigos de um usuário.
+     * Lista os amigos de um usuário em ordem alfabética.
      *
      * @param login Login do usuário
-     * @return String formatada com lista de amigos
+     * @return String formatada com lista de amigos no formato "{amigo1,amigo2}"
      * @throws UsuarioNaoEncontradoException Se o usuário não existir
      */
     public String getAmigos(String login) {
@@ -117,11 +130,11 @@ public class Jackute implements Serializable {
     /**
      * Envia um recado para outro usuário.
      *
-     * @param idSessao ID da sessão
+     * @param idSessao ID da sessão do remetente
      * @param destinatario Login do destinatário
      * @param mensagem Conteúdo do recado
      * @throws AutoMensagemException Se enviar para si mesmo
-     * @throws UsuarioNaoEncontradoException Se destinatário não existir
+     * @throws UsuarioNaoEncontradoException Se o destinatário não existir
      */
     public void enviarRecado(String idSessao, String destinatario, String mensagem) {
         Usuario remetente = getUsuarioPorSessao(idSessao);
@@ -135,12 +148,12 @@ public class Jackute implements Serializable {
     }
 
     /**
-     * Lê o próximo recado do usuário.
+     * Lê o próximo recado não lido do usuário logado.
      *
-     * @param idSessao ID da sessão
-     * @return Conteúdo do recado
-     * @throws SemRecadosException Se não houver recados
-     * @throws UsuarioNaoEncontradoException Se sessão inválida
+     * @param idSessao ID da sessão ativa
+     * @return Conteúdo do recado no formato "mensagem"
+     * @throws SemRecadosException Se não houver recados disponíveis
+     * @throws UsuarioNaoEncontradoException Se a sessão for inválida
      */
     public String lerRecado(String idSessao) {
         Usuario usuario = getUsuarioPorSessao(idSessao);
@@ -148,14 +161,62 @@ public class Jackute implements Serializable {
     }
 
     /**
-     * Reinicia todo o sistema.
+     * Cria uma nova comunidade no sistema.
+     *
+     * @param idSessao ID da sessão do usuário criador
+     * @param nome Nome único da comunidade
+     * @param descricao Descrição da comunidade
+     * @throws ComunidadeJaExisteException Se já existir comunidade com o mesmo nome
+     * @throws UsuarioNaoEncontradoException Se a sessão for inválida
      */
-    public void zerar() {
-        usuarios.zerar();
-        sessoes.zerar();
+    public void criarComunidade(String idSessao, String nome, String descricao) {
+        Usuario usuario = getUsuarioPorSessao(idSessao);
+        comunidades.criarComunidade(nome, descricao, usuario.getLogin());
+    }
+
+    /**
+     * Obtém a descrição de uma comunidade.
+     *
+     * @param nome Nome da comunidade
+     * @return Descrição da comunidade
+     * @throws ComunidadeNaoEncontradaException Se a comunidade não existir
+     */
+    public String getDescricaoComunidade(String nome) {
+        return comunidades.getDescricao(nome);
+    }
+
+    /**
+     * Obtém o dono de uma comunidade.
+     *
+     * @param nome Nome da comunidade
+     * @return Login do dono da comunidade
+     * @throws ComunidadeNaoEncontradaException Se a comunidade não existir
+     */
+    public String getDonoComunidade(String nome) {
+        return comunidades.getDono(nome);
+    }
+
+    /**
+     * Lista os membros de uma comunidade.
+     *
+     * @param nome Nome da comunidade
+     * @return String formatada com lista de membros no formato "{membro1,membro2}"
+     * @throws ComunidadeNaoEncontradaException Se a comunidade não existir
+     */
+    public String getMembrosComunidade(String nome) {
+        Community c = comunidades.getComunidade(nome);
+        return "{" + String.join(",", c.getMembers()) + "}";
     }
 
     // Métodos auxiliares internos
+
+    /**
+     * Obtém o usuário associado a uma sessão.
+     *
+     * @param idSessao ID da sessão
+     * @return Instância do usuário
+     * @throws UsuarioNaoEncontradoException Se a sessão for inválida
+     */
     private Usuario getUsuarioPorSessao(String idSessao) {
         String login = sessoes.getLogin(idSessao);
         if (login == null) {
@@ -164,6 +225,26 @@ public class Jackute implements Serializable {
         return usuarios.getUsuario(login);
     }
 
+    // Novos métodos para US6
+    public void adicionarComunidade(String idSessao, String nomeComunidade) {
+        Usuario usuario = getUsuarioPorSessao(idSessao);
+        comunidades.adicionarMembro(nomeComunidade, usuario.getLogin());
+        usuario.adicionarComunidade(nomeComunidade);
+    }
+
+    public String getComunidades(String login) {
+        Usuario usuario = usuarios.getUsuario(login);
+        return "{" + String.join(",", usuario.getComunidades()) + "}";
+    }
+
+    /**
+     * Valida credenciais de login e senha.
+     *
+     * @param login Login a ser validado
+     * @param senha Senha a ser validada
+     * @throws LoginInvalidoException Se o login for inválido
+     * @throws SenhaInvalidaException Se a senha for inválida
+     */
     private void validarCredenciais(String login, String senha) {
         if (login == null || login.isBlank())
             throw new LoginInvalidoException();
@@ -174,7 +255,7 @@ public class Jackute implements Serializable {
     /**
      * Salva o estado atual do sistema em arquivo.
      *
-     * @param arquivo Caminho do arquivo
+     * @param arquivo Caminho do arquivo para salvar
      * @throws IOException Se ocorrer erro de I/O
      */
     public void salvarEstado(String arquivo) throws IOException {
@@ -186,14 +267,22 @@ public class Jackute implements Serializable {
     /**
      * Carrega o estado do sistema de um arquivo.
      *
-     * @param arquivo Caminho do arquivo
+     * @param arquivo Caminho do arquivo para carregar
      * @return Instância do sistema carregada
      * @throws IOException Se ocorrer erro de I/O
-     * @throws ClassNotFoundException Se classe não for encontrada
+     * @throws ClassNotFoundException Se a classe do objeto serializado não for encontrada
      */
     public static Jackute carregarEstado(String arquivo) throws IOException, ClassNotFoundException {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(arquivo))) {
             return (Jackute) ois.readObject();
+        }
+    }
+
+    // Método para garantir compatibilidade de versões serializadas
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        ois.defaultReadObject();
+        if (this.comunidades == null) {
+            this.comunidades = new GerenciadorComunidades();
         }
     }
 }
