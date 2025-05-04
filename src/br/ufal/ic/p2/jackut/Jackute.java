@@ -18,7 +18,7 @@ public class Jackute implements Serializable {
 
     private final GerenciadorUsuarios usuarios = new GerenciadorUsuarios();
     private final GerenciadorSessoes sessoes = new GerenciadorSessoes();
-    private GerenciadorComunidades comunidades = new GerenciadorComunidades();
+    private  GerenciadorComunidades comunidades = new GerenciadorComunidades(usuarios);
 
     /**
      * Reinicia todo o sistema, limpando todos os dados armazenados.
@@ -266,6 +266,16 @@ public class Jackute implements Serializable {
         }
     }
 
+    public void enviarMensagem(String idSessao, String nomeComunidade, String mensagem) {
+        Usuario remetente = getUsuarioPorSessao(idSessao);
+        comunidades.enviarMensagem(nomeComunidade, mensagem);
+    }
+
+    public String lerMensagem(String idSessao) {
+        Usuario usuario = getUsuarioPorSessao(idSessao);
+        return usuario.lerMensagem();
+    }
+
     /**
      * Carrega o estado do sistema de um arquivo.
      *
@@ -284,7 +294,7 @@ public class Jackute implements Serializable {
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
         ois.defaultReadObject();
         if (this.comunidades == null) {
-            this.comunidades = new GerenciadorComunidades();
+            this.comunidades = new GerenciadorComunidades(this.usuarios); // Passa a referência existente
         }
     }
 }

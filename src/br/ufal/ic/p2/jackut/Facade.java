@@ -210,4 +210,13 @@ public class Facade {
             throw new PersistenciaException();
         }
     }
+
+    public void enviarMensagem(String id, String comunidade, String mensagem) {
+        sistema.enviarMensagem(id, comunidade, mensagem);
+    }
+
+    public String lerMensagem(String id) {
+        return sistema.lerMensagem(id);
+    }
+
 }

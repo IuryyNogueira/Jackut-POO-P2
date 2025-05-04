@@ -168,4 +168,21 @@ public class Usuario implements Serializable {
     public Set<String> getComunidades() {
         return Collections.unmodifiableSet(comunidades);
     }
+
+    private Queue<String> mensagens = new LinkedList<>();
+
+    public void receberMensagem(String mensagem) {
+        mensagens.add(mensagem);
+    }
+
+    public String lerMensagem() {
+        if (mensagens.isEmpty()) {
+            throw new SemMensagensException();
+        }
+        return mensagens.poll();
+    }
+
+    public boolean temMensagens() {
+        return !mensagens.isEmpty();
+    }
 }

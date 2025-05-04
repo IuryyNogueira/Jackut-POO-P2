@@ -42,4 +42,8 @@ public class Community implements Serializable {
     public List<String> getMembers() {
         return new ArrayList<>(this.members);
     }
+
+    public List<String> getMembros() {
+        return new ArrayList<>(members);
+    }
 }
