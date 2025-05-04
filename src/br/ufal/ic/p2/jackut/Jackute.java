@@ -140,6 +140,13 @@ public class Jackute implements Serializable {
         Usuario remetente = getUsuarioPorSessao(idSessao);
         Usuario dest = usuarios.getUsuario(destinatario);
 
+        // 1. Verifica se o destinatário é inimigo
+        if (remetente.getInimigos().contains(destinatario)) {
+            String nomeInimigo = dest.getPerfil().getAtributo("nome");
+            throw new InimigoException(nomeInimigo);
+        }
+
+        // 2. Verifica auto-mensagem
         if (remetente.getLogin().equals(destinatario)) {
             throw new AutoMensagemException("Usuário não pode enviar recado para si mesmo.");
         }
@@ -297,4 +304,40 @@ public class Jackute implements Serializable {
             this.comunidades = new GerenciadorComunidades(this.usuarios); // Passa a referência existente
         }
     }
+
+    // Implementação dos novos métodos
+    public void adicionarIdolo(String sessao, String idolo) {
+        Usuario usuario = getUsuarioPorSessao(sessao);
+        usuarios.adicionarIdolo(usuario.getLogin(), idolo);
+    }
+
+    public void adicionarPaquera(String sessao, String paquera) {
+        Usuario usuario = getUsuarioPorSessao(sessao);
+        usuarios.adicionarPaquera(usuario.getLogin(), paquera);
+    }
+
+    public boolean ehFa(String login, String idolo) {
+        return usuarios.getUsuario(login).getIdolos().contains(idolo);
+    }
+
+    public void adicionarInimigo(String sessao, String inimigo) {
+        Usuario usuario = getUsuarioPorSessao(sessao);
+        usuarios.adicionarInimigo(usuario.getLogin(), inimigo);
+    }
+
+    public String getFas(String login) {
+        Usuario usuario = usuarios.getUsuario(login);
+        return "{" + String.join(",", usuario.getFas()) + "}";
+    }
+
+    public boolean ehPaquera(String sessao, String paquera) {
+        Usuario usuario = getUsuarioPorSessao(sessao);
+        return usuario.getPaqueras().contains(paquera);
+    }
+
+    public String getPaqueras(String sessao) {
+        Usuario usuario = getUsuarioPorSessao(sessao);
+        return "{" + String.join(",", usuario.getPaqueras()) + "}";
+    }
+
 }

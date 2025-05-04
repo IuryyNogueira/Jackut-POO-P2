@@ -3,6 +3,7 @@ package br.ufal.ic.p2.jackut.models;
 import br.ufal.ic.p2.jackut.exceptions.*;
 import java.io.Serializable;
 import java.util.*;
+import br.ufal.ic.p2.jackut.exceptions.RelacaoExistenteException;
 
 /**
  * Representa um usuário do sistema Jackut, contendo informações de perfil,
@@ -185,4 +186,39 @@ public class Usuario implements Serializable {
     public boolean temMensagens() {
         return !mensagens.isEmpty();
     }
+
+    // Novos campos
+    private Set<String> idolos = new HashSet<>();
+    private Set<String> fas = new HashSet<>();
+    private Set<String> paqueras = new LinkedHashSet<>();
+    private Set<String> inimigos = new HashSet<>();
+
+    // Métodos para relações
+    public void adicionarIdolo(String idolo) {
+        if (idolos.contains(idolo)) {
+            throw new RelacaoExistenteException("Usuário já está adicionado como ídolo.");
+        }
+        idolos.add(idolo);
+    }
+
+    public void adicionarFa(String fa) {
+        fas.add(fa);
+    }
+
+    public void adicionarPaquera(String paquera) {
+        if (paqueras.contains(paquera)) {
+            throw new PaqueraExistenteException();
+        }
+        paqueras.add(paquera);
+    }
+
+    public void adicionarInimigo(String inimigo) {
+        inimigos.add(inimigo);
+    }
+
+    // Getters
+    public Set<String> getIdolos() { return Collections.unmodifiableSet(idolos); }
+    public Set<String> getFas() { return Collections.unmodifiableSet(fas); }
+    public Set<String> getPaqueras() { return Collections.unmodifiableSet(paqueras); }
+    public Set<String> getInimigos() { return Collections.unmodifiableSet(inimigos); }
 }

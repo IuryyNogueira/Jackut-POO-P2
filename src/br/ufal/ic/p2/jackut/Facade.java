@@ -219,4 +219,33 @@ public class Facade {
         return sistema.lerMensagem(id);
     }
 
+    // Métodos para novas relações
+    public void adicionarIdolo(String sessao, String idolo) {
+        sistema.adicionarIdolo(sessao, idolo);
+    }
+
+    public void adicionarPaquera(String sessao, String paquera) {
+        sistema.adicionarPaquera(sessao, paquera);
+    }
+
+    public boolean ehFa(String login, String idolo) {
+        return sistema.ehFa(login, idolo);
+    }
+
+    public String getFas(String login) {
+        return sistema.getFas(login);
+    }
+
+    public boolean ehPaquera(String sessao, String paquera) {
+        return sistema.ehPaquera(sessao, paquera);
+    }
+
+    public String getPaqueras(String sessao) {
+        return sistema.getPaqueras(sessao);
+    }
+
+    public void adicionarInimigo(String sessao, String inimigo) {
+        sistema.adicionarInimigo(sessao, inimigo);
+    }
+
 }
