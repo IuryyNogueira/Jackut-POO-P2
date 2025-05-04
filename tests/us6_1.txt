@@ -46,4 +46,4 @@ expectError "Usuário não cadastrado." adicionarComunidade sessao=${s3} nome="Pro
 expectError "Usuário não cadastrado." getComunidades sessao=${s3}
 
 encerrarSistema
-quit
+#quit

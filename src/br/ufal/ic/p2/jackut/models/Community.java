@@ -20,8 +20,6 @@ public class Community implements Serializable {
 
     // Getters
     public String getName() { return name; }
-    public String getDescription() { return description; }
-    public String getOwner() { return owner; }
 
     public void setDescription(String description) {
         this.description = description;
@@ -33,7 +31,15 @@ public class Community implements Serializable {
         }
     }
 
+    public String getDescription() {
+        return this.description;
+    }
+
+    public String getOwner() {
+        return this.owner;
+    }
+
     public List<String> getMembers() {
-        return new ArrayList<>(members); // Retorna na ordem de inserção
+        return new ArrayList<>(this.members);
     }
 }

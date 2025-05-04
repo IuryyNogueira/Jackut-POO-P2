@@ -162,12 +162,10 @@ public class Usuario implements Serializable {
     private LinkedHashSet<String> comunidades = new LinkedHashSet<>();
 
     public void adicionarComunidade(String nomeComunidade) {
-        comunidades.add(nomeComunidade);
+        comunidades.add(nomeComunidade); // Já usa LinkedHashSet
     }
 
     public Set<String> getComunidades() {
-        return Collections.unmodifiableSet(comunidades); // Ordem de inserção
+        return Collections.unmodifiableSet(comunidades);
     }
-
-
 }

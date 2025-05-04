@@ -205,7 +205,7 @@ public class Facade {
         try {
             sistema = Jackute.carregarEstado(ARQUIVO_DADOS);
         } catch (FileNotFoundException e) {
-            sistema = new Jackute();
+            sistema = new Jackute(); // Recria se arquivo não existe
         } catch (IOException | ClassNotFoundException e) {
             throw new PersistenciaException();
         }

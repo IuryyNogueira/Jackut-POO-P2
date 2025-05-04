@@ -172,7 +172,9 @@ public class Jackute implements Serializable {
     public void criarComunidade(String idSessao, String nome, String descricao) {
         Usuario usuario = getUsuarioPorSessao(idSessao);
         comunidades.criarComunidade(nome, descricao, usuario.getLogin());
+        usuario.adicionarComunidade(nome); // Adiciona comunidade ao usuário criador
     }
+
 
     /**
      * Obtém a descrição de uma comunidade.
@@ -229,7 +231,7 @@ public class Jackute implements Serializable {
     public void adicionarComunidade(String idSessao, String nomeComunidade) {
         Usuario usuario = getUsuarioPorSessao(idSessao);
         comunidades.adicionarMembro(nomeComunidade, usuario.getLogin());
-        usuario.adicionarComunidade(nomeComunidade);
+        usuario.adicionarComunidade(nomeComunidade); // Adiciona à lista do usuário
     }
 
     public String getComunidades(String login) {
