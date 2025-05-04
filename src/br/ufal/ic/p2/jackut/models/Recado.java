@@ -29,6 +29,11 @@ public class Recado implements Serializable {
         this.mensagem = mensagem;
     }
 
+    // Novo método adicionado
+    public String getRemetente() {
+        return remetente;
+    }
+
     /**
      * Retorna a representação textual do recado (apenas o conteúdo da mensagem).
      *

@@ -167,7 +167,7 @@ public class Usuario implements Serializable {
     }
 
     public Set<String> getComunidades() {
-        return Collections.unmodifiableSet(comunidades);
+        return this.comunidades;
     }
 
     private Queue<String> mensagens = new LinkedList<>();
@@ -221,4 +221,18 @@ public class Usuario implements Serializable {
     public Set<String> getFas() { return Collections.unmodifiableSet(fas); }
     public Set<String> getPaqueras() { return Collections.unmodifiableSet(paqueras); }
     public Set<String> getInimigos() { return Collections.unmodifiableSet(inimigos); }
+
+    public void removerRelacionamentos(String login) {
+        amigos.remove(login);
+        fas.remove(login);
+        idolos.remove(login);
+        paqueras.remove(login);
+        inimigos.remove(login);
+    }
+
+    public void removerRecadosDoUsuario(String remetente) {
+        recados.removeIf(r -> r.getRemetente().equals(remetente));
+    }
+
+
 }

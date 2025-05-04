@@ -53,4 +53,9 @@ public class GerenciadorSessoes implements Serializable {
     public void zerar() {
         sessoes.clear();
     }
+
+
+    public void removerSessoesDoUsuario(String login) {
+        sessoes.values().removeIf(v -> v.equals(login));
+    }
 }

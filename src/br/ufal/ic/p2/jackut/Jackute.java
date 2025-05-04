@@ -340,4 +340,22 @@ public class Jackute implements Serializable {
         return "{" + String.join(",", usuario.getPaqueras()) + "}";
     }
 
+    public void removerUsuario(String idSessao) {
+        String login = sessoes.getLogin(idSessao);
+        if (login == null) {
+            throw new UsuarioNaoEncontradoException();
+        }
+
+        // Remove de comunidades
+        comunidades.removerUsuarioDeTodasComunidades(login);
+
+        // Remove sessões
+        sessoes.removerSessoesDoUsuario(login);
+
+        // Atualiza relacionamentos de outros usuários
+        usuarios.removerUsuarioDeRelacionamentos(login);
+
+        // Remove o usuário
+        usuarios.removerUsuario(login);
+    }
 }

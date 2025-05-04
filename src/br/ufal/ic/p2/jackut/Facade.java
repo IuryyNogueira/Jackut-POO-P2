@@ -248,4 +248,9 @@ public class Facade {
         sistema.adicionarInimigo(sessao, inimigo);
     }
 
+
+    public void removerUsuario(String idSessao) {
+        sistema.removerUsuario(idSessao);
+    }
+
 }

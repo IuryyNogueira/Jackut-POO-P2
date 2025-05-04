@@ -61,4 +61,31 @@ public class GerenciadorComunidades implements Serializable {
             usuario.receberMensagem(mensagem); // Mensagem pura, sem modificações
         }
     }
+
+    public void removerUsuarioDeTodasComunidades(String login) {
+        // Lista de comunidades para deletar (onde o usuário é dono)
+        List<String> comunidadesParaDeletar = new ArrayList<>();
+
+        // Primeira passada: identifica comunidades para deletar
+        for (Map.Entry<String, Community> entry : comunidades.entrySet()) {
+            Community c = entry.getValue();
+            if (c.getOwner().equals(login)) {
+                comunidadesParaDeletar.add(entry.getKey());
+            }
+        }
+
+        // Deleta comunidades onde o usuário era dono
+        for (String nomeComunidade : comunidadesParaDeletar) {
+            comunidades.remove(nomeComunidade);
+        }
+
+        // Segunda passada: remove o usuário das demais comunidades
+        for (Community c : comunidades.values()) {
+            c.getMembers().remove(login);
+        }
+
+        // Remove a comunidade da lista de todos os usuários
+        usuarios.removerComunidadeDeTodosUsuarios(comunidadesParaDeletar);
+    }
+
 }

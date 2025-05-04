@@ -226,17 +226,21 @@ public class GerenciadorUsuarios implements Serializable {
         return "{" + String.join(",", usuario.getPaqueras()) + "}";
     }
 
-    public void enviarRecado(String remetente, String destinatario, String mensagem) {
-        Usuario rem = getUsuario(remetente);
-        Usuario dest = getUsuario(destinatario);
+    public void removerUsuario(String login) {
+        usuarios.remove(login);
+    }
 
-        // Verifica se o destinatário é inimigo
-        if (rem.getInimigos().contains(destinatario)) {
-            String nomeInimigo = dest.getPerfil().getAtributo("nome");
-            throw new InimigoException(nomeInimigo);
+    public void removerUsuarioDeRelacionamentos(String loginAlvo) {
+        for (Usuario usuario : usuarios.values()) {
+            usuario.removerRelacionamentos(loginAlvo);
+            usuario.removerRecadosDoUsuario(loginAlvo);
         }
+    }
 
-        dest.adicionarRecado(new Recado(rem.getLogin(), mensagem));
+    public void removerComunidadeDeTodosUsuarios(List<String> comunidades) {
+        for (Usuario usuario : usuarios.values()) {
+            usuario.getComunidades().removeAll(comunidades);
+        }
     }
 
 
