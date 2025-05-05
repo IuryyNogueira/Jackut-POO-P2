@@ -5,7 +5,7 @@
 Parte 1 :
 ![Diagram.svg](Diagram.svg)
 Parte 2 :
-![Diagram2.svg](Diagram2.svg)
+![diagram2.svg](diagram2.svg)
 
 ## 📄 Documentação Técnica
 
