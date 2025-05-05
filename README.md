@@ -1,11 +1,41 @@
 # Jackut - Sistema de Rede Social (POO/UFAL)
 
 ## 📁 Estrutura do Projeto
+
+Parte 1 :
 ![Diagram.svg](Diagram.svg)
+Parte 2 :
+![Diagram2.svg](Diagram2.svg)
+
 ## 📄 Documentação Técnica
 
-### relatorio-milestone1:
-Arquivo pdf disponível na raiz do projeto descrevendo o design, explicando escolhas e inclunindo o diagrama de classes.
+### Relatórios:
+- **relatorio-milestone1.pdf**
+- **relatorio-milestone2.pdf**
+
+Arquivos pdf disponível na raiz do projeto descrevendo o design, explicando escolhas e inclunindo o diagrama de classes.
+
+## 🚀 Milestone 2 - Novas Funcionalidades
+### Comunidades & Relacionamentos Avançados
+- **Criação de Comunidades**  
+  Usuários podem criar comunidades com nome único e descrição
+- **Membros & Mensagens Coletivas**  
+  Adição de membros e envio de mensagens para toda a comunidade
+- **Novos Tipos de Relacionamentos**
+    - 🎭 Fã-Ídolo (relação pública unidirecional)
+    - 💘 Paquera (relação privada com notificação mútua)
+    - ⚔️ Inimizade (bloqueio de interações)
+- **Gestão de Conta**  
+  Remoção completa de usuários com limpeza de dados relacionados
+
+### User Stories Implementadas
+| US  | Descrição                                        | Status     |
+|-----|--------------------------------------------------|------------|
+| 5   | Criação e gestão de comunidades                 | ✅ Completa|
+| 6   | Adição de membros às comunidades                | ✅ Completa|
+| 7   | Mensagens para comunidades                      | ✅ Completa|
+| 8   | Relacionamentos complexos (fã/paquera/inimigo)  | ✅ Completa|
+| 9   | Remoção de conta com limpeza de dados           | ✅ Completa|
 
 
 ### Javadoc:

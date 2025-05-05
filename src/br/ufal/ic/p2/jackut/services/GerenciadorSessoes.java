@@ -6,15 +6,15 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Gerencia as sessões de usuários no sistema, responsável pela criação,
- * armazenamento e validação de sessões ativas.
+ * Gerencia as sessões de usuários no sistema, incluindo criação, consulta e encerramento.
  * <p>
- * Mantém o mapeamento entre IDs de sessão únicos e logins de usuários autenticados.
+ * Mantém o mapeamento entre identificadores de sessão (UUID) e logins de usuários
+ * autenticados, permitindo validação de operações restritas.
  * </p>
  *
- * @author IuryNogueira
+ * @author Iury
  * @version 1.0
- * @see Serializable
+ * @since 2025-05-04
  */
 public class GerenciadorSessoes implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -23,15 +23,14 @@ public class GerenciadorSessoes implements Serializable {
     /**
      * Cria uma nova sessão para um usuário autenticado.
      *
-     * @param login Login do usuário para o qual a sessão será criada
-     * @return ID único da sessão gerada (formato UUID)
-     * @throws IllegalArgumentException Se o login for nulo ou vazio
+     * @param login login do usuário para o qual gerar a sessão
+     * @return ID único da sessão (UUID)
+     * @throws IllegalArgumentException se o login for nulo ou vazio
      */
     public String criarSessao(String login) {
         if (login == null || login.isBlank()) {
             throw new IllegalArgumentException("Login inválido para criação de sessão");
         }
-
         String id = UUID.randomUUID().toString();
         sessoes.put(id, login);
         return id;
@@ -40,21 +39,25 @@ public class GerenciadorSessoes implements Serializable {
     /**
      * Recupera o login associado a uma sessão.
      *
-     * @param idSessao ID da sessão a ser verificada
-     * @return Login do usuário associado à sessão, ou null se a sessão não existir
+     * @param idSessao ID da sessão
+     * @return login do usuário ou null se a sessão não existir
      */
     public String getLogin(String idSessao) {
         return sessoes.get(idSessao);
     }
 
     /**
-     * Encerra todas as sessões ativas, reiniciando o gerenciador.
+     * Encerra todas as sessões ativas, removendo todos os registros.
      */
     public void zerar() {
         sessoes.clear();
     }
 
-
+    /**
+     * Remove todas as sessões relacionadas a um determinado usuário.
+     *
+     * @param login login do usuário cujas sessões devem ser removidas
+     */
     public void removerSessoesDoUsuario(String login) {
         sessoes.values().removeIf(v -> v.equals(login));
     }

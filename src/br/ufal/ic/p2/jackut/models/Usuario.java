@@ -7,12 +7,12 @@ import br.ufal.ic.p2.jackut.exceptions.RelacaoExistenteException;
 
 /**
  * Representa um usuário do sistema Jackut, contendo informações de perfil,
- * relacionamentos de amizade, convites e recados.
+ * relacionamentos de amizade, convites, recados e outros tipos de relacionamentos.
  *
  * <p>Esta classe implementa {@link Serializable} para permitir persistência dos dados.</p>
  *
  * @author IuryNogueira
- * @version 1.0
+ * @version 1.1
  * @see Perfil
  * @see Recado
  */
@@ -162,20 +162,41 @@ public class Usuario implements Serializable {
 
     private LinkedHashSet<String> comunidades = new LinkedHashSet<>();
 
+    /**
+     * Adiciona o usuário a uma comunidade
+     *
+     * @param nomeComunidade Nome da comunidade a ser adicionada
+     */
     public void adicionarComunidade(String nomeComunidade) {
-        comunidades.add(nomeComunidade); // Já usa LinkedHashSet
+        comunidades.add(nomeComunidade);
     }
 
+    /**
+     * Retorna as comunidades do usuário
+     *
+     * @return Conjunto de nomes de comunidades
+     */
     public Set<String> getComunidades() {
         return this.comunidades;
     }
 
     private Queue<String> mensagens = new LinkedList<>();
 
+    /**
+     * Recebe uma mensagem para o usuário
+     *
+     * @param mensagem Mensagem a ser armazenada
+     */
     public void receberMensagem(String mensagem) {
         mensagens.add(mensagem);
     }
 
+    /**
+     * Lê e remove a próxima mensagem da fila
+     *
+     * @return Conteúdo da mensagem
+     * @throws SemMensagensException Se não houver mensagens disponíveis
+     */
     public String lerMensagem() {
         if (mensagens.isEmpty()) {
             throw new SemMensagensException();
@@ -183,6 +204,11 @@ public class Usuario implements Serializable {
         return mensagens.poll();
     }
 
+    /**
+     * Verifica se existem mensagens não lidas
+     *
+     * @return true se houver mensagens não lidas, false caso contrário
+     */
     public boolean temMensagens() {
         return !mensagens.isEmpty();
     }
@@ -193,7 +219,12 @@ public class Usuario implements Serializable {
     private Set<String> paqueras = new LinkedHashSet<>();
     private Set<String> inimigos = new HashSet<>();
 
-    // Métodos para relações
+    /**
+     * Adiciona um ídolo ao usuário
+     *
+     * @param idolo Login do usuário a ser adicionado como ídolo
+     * @throws RelacaoExistenteException Se o usuário já for um ídolo
+     */
     public void adicionarIdolo(String idolo) {
         if (idolos.contains(idolo)) {
             throw new RelacaoExistenteException("Usuário já está adicionado como ídolo.");
@@ -201,10 +232,21 @@ public class Usuario implements Serializable {
         idolos.add(idolo);
     }
 
+    /**
+     * Adiciona um fã ao usuário
+     *
+     * @param fa Login do usuário que é fã deste usuário
+     */
     public void adicionarFa(String fa) {
         fas.add(fa);
     }
 
+    /**
+     * Adiciona uma paquera ao usuário
+     *
+     * @param paquera Login do usuário a ser adicionado como paquera
+     * @throws PaqueraExistenteException Se o usuário já for uma paquera
+     */
     public void adicionarPaquera(String paquera) {
         if (paqueras.contains(paquera)) {
             throw new PaqueraExistenteException();
@@ -212,16 +254,48 @@ public class Usuario implements Serializable {
         paqueras.add(paquera);
     }
 
+    /**
+     * Adiciona um inimigo ao usuário
+     *
+     * @param inimigo Login do usuário a ser adicionado como inimigo
+     */
     public void adicionarInimigo(String inimigo) {
         inimigos.add(inimigo);
     }
 
-    // Getters
+    /**
+     * Retorna os ídolos do usuário
+     *
+     * @return Conjunto imutável de logins de ídolos
+     */
     public Set<String> getIdolos() { return Collections.unmodifiableSet(idolos); }
+
+    /**
+     * Retorna os fãs do usuário
+     *
+     * @return Conjunto imutável de logins de fãs
+     */
     public Set<String> getFas() { return Collections.unmodifiableSet(fas); }
+
+    /**
+     * Retorna as paqueras do usuário
+     *
+     * @return Conjunto imutável de logins de paqueras
+     */
     public Set<String> getPaqueras() { return Collections.unmodifiableSet(paqueras); }
+
+    /**
+     * Retorna os inimigos do usuário
+     *
+     * @return Conjunto imutável de logins de inimigos
+     */
     public Set<String> getInimigos() { return Collections.unmodifiableSet(inimigos); }
 
+    /**
+     * Remove todos os relacionamentos com um usuário específico
+     *
+     * @param login Login do usuário a ter os relacionamentos removidos
+     */
     public void removerRelacionamentos(String login) {
         amigos.remove(login);
         fas.remove(login);
@@ -230,9 +304,12 @@ public class Usuario implements Serializable {
         inimigos.remove(login);
     }
 
+    /**
+     * Remove todos os recados enviados por um usuário específico
+     *
+     * @param remetente Login do usuário remetente dos recados a serem removidos
+     */
     public void removerRecadosDoUsuario(String remetente) {
         recados.removeIf(r -> r.getRemetente().equals(remetente));
     }
-
-
 }

@@ -1,33 +1,43 @@
-import easyaccept.EasyAccept;
-
 /**
- * Classe principal responsável por executar os testes de aceitação do sistema Jackut.
+ * Classe principal do sistema Jackut, responsável pela execução dos testes de aceitação
+ * definidos pelas user stories US1 a US9, incluindo validações de persistência.
  * <p>
- * Esta classe utiliza o framework EasyAccept para validar as funcionalidades implementadas
- * conforme as user stories definidas.
+ * Utiliza o framework EasyAccept para carregar e executar os roteiros de teste
+ * localizados na pasta <code>tests/</code>.
  * </p>
  *
- * @author IuryNogueira
+ * @author Iury
  * @version 1.0
  */
+import easyaccept.EasyAccept;
+
 public class Main {
     /**
-     * Ponto de entrada do programa. Executa sequencialmente todos os testes de aceitação
-     * para as user stories US1 a US4, incluindo testes de persistência.
+     * Ponto de entrada da aplicação. Executa sequencialmente todos os roteiros de teste
+     * de aceitação fornecidos, agrupados por user story e fase (funcionalidade básica e
+     * persistência).
      *
-     * @param args Argumentos de linha de comando (não utilizados neste contexto)
+     * @param args argumentos de linha de comando (não utilizados)
      */
     public static void main(String[] args) {
-        // Configuração dos parâmetros para cada conjunto de testes
+        // Testes US1 - Criação de conta e persistência
         String[] argsUS1_1 = {"br.ufal.ic.p2.jackut.Facade", "tests/us1_1.txt"};
         String[] argsUS1_2 = {"br.ufal.ic.p2.jackut.Facade", "tests/us1_2.txt"};
+
+        // Testes US2 - Edição de perfil e persistência
         String[] argsUS2_1 = {"br.ufal.ic.p2.jackut.Facade", "tests/us2_1.txt"};
         String[] argsUS2_2 = {"br.ufal.ic.p2.jackut.Facade", "tests/us2_2.txt"};
+
+        // Testes US3 - Sistema de amizades e persistência
         String[] argsUS3_1 = {"br.ufal.ic.p2.jackut.Facade", "tests/us3_1.txt"};
         String[] argsUS3_2 = {"br.ufal.ic.p2.jackut.Facade", "tests/us3_2.txt"};
+
+        // Testes US4 - Troca de recados e persistência
         String[] argsUS4_1 = {"br.ufal.ic.p2.jackut.Facade", "tests/us4_1.txt"};
         String[] argsUS4_2 = {"br.ufal.ic.p2.jackut.Facade", "tests/us4_2.txt"};
 
+        // Testes US5 a US9 - Criação de comunidades, adição, mensagens,
+        // novos relacionamentos e remoção de conta, ambos fases básica e persistência
         String[] argsUS5_1 = {"br.ufal.ic.p2.jackut.Facade", "tests/us5_1.txt"};
         String[] argsUS5_2 = {"br.ufal.ic.p2.jackut.Facade", "tests/us5_2.txt"};
 
@@ -43,15 +53,18 @@ public class Main {
         String[] argsUS9_1 = {"br.ufal.ic.p2.jackut.Facade", "tests/us9_1.txt"};
         String[] argsUS9_2 = {"br.ufal.ic.p2.jackut.Facade", "tests/us9_2.txt"};
 
-        // Execução sequencial dos testes
-        EasyAccept.main(argsUS1_1);  // Testes US1 - Criação de conta 8(casos básicos)
-        EasyAccept.main(argsUS1_2);  // Testes US1 - Validação de persistência
-        EasyAccept.main(argsUS2_1);  // Testes US2 - Perfil (operações básicas)
-        EasyAccept.main(argsUS2_2);  // Testes US2 - Validação de persistência
-        EasyAccept.main(argsUS3_1);  // Testes US3 - Amizades (casos básicos)
-        EasyAccept.main(argsUS3_2);  // Testes US3 - Validação de persistência
-        EasyAccept.main(argsUS4_1);  // Testes US4 - Recados (operações básicas)
-        EasyAccept.main(argsUS4_2);  // Testes US4 - Validação de persistência
+        // Execução principal de todos os testes
+        EasyAccept.main(argsUS1_1);
+        EasyAccept.main(argsUS1_2);
+
+        EasyAccept.main(argsUS2_1);
+        EasyAccept.main(argsUS2_2);
+
+        EasyAccept.main(argsUS3_1);
+        EasyAccept.main(argsUS3_2);
+
+        EasyAccept.main(argsUS4_1);
+        EasyAccept.main(argsUS4_2);
 
         EasyAccept.main(argsUS5_1);
         EasyAccept.main(argsUS5_2);

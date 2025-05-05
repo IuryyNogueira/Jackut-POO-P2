@@ -4,195 +4,321 @@ import br.ufal.ic.p2.jackut.exceptions.*;
 import java.io.*;
 
 /**
- * Fachada principal do sistema Jackut que fornece uma interface simplificada para as operações do sistema.
+ * Fachada do sistema Jackut, oferecendo interface de alto nível para operações
+ * de gerenciamento de usuários, sessões, relacionamentos, recados e comunidades.
+ * Cuida também da persistência automática de estado em disco.
  *
- * @author IuryNogueira
+ * @author Iury
+ * @version 1.0
+ * @since 2025-05-04
  */
 public class Facade {
     private Jackute sistema;
     private static final String ARQUIVO_DADOS = "dados_jackut.dat";
 
     /**
-     * Constrói uma nova fachada e carrega os dados persistidos do sistema.
+     * Inicializa a fachada e tenta carregar dados persistidos;
+     * se não existirem, cria novo sistema.
      */
     public Facade() {
         carregarDados();
     }
 
     /**
-     * Cria um novo usuário no sistema.
+     * Cria um novo usuário.
      *
-     * @param login Identificador único do usuário
-     * @param senha Senha de acesso do usuário
-     * @param nome Nome completo do usuário
-     * @throws LoginInvalidoException Se o login for inválido
-     * @throws SenhaInvalidaException Se a senha for inválida
-     * @throws UsuarioJaExisteException Se o login já estiver em uso
+     * @param login login único
+     * @param senha senha de acesso
+     * @param nome  nome completo
+     * @throws LoginInvalidoException   se login inválido
+     * @throws SenhaInvalidaException   se senha inválida
+     * @throws UsuarioJaExisteException se login já em uso
      */
     public void criarUsuario(String login, String senha, String nome) {
         sistema.criarUsuario(login, senha, nome);
     }
 
     /**
-     * Autentica um usuário e inicia uma nova sessão.
+     * Autentica e abre sessão para um usuário.
      *
-     * @param login Login do usuário
-     * @param senha Senha do usuário
+     * @param login login do usuário
+     * @param senha senha do usuário
      * @return ID da sessão criada
-     * @throws LoginOuSenhaInvalidosException Se as credenciais forem inválidas
+     * @throws LoginOuSenhaInvalidosException se credenciais inválidas
      */
     public String abrirSessao(String login, String senha) {
         return sistema.abrirSessao(login, senha);
     }
 
     /**
-     * Obtém o valor de um atributo do perfil de um usuário.
+     * Obtém valor de atributo de perfil.
      *
-     * @param login Login do usuário
-     * @param atributo Nome do atributo
-     * @return Valor do atributo solicitado
-     * @throws UsuarioNaoEncontradoException Se o usuário não existir
-     * @throws AtributoNaoPreenchidoException Se o atributo não estiver definido
+     * @param login    login do usuário
+     * @param atributo nome do atributo
+     * @return valor do atributo
+     * @throws UsuarioNaoEncontradoException  se usuário não existir
+     * @throws AtributoNaoPreenchidoException se atributo não definido
      */
     public String getAtributoUsuario(String login, String atributo) {
         return sistema.getAtributoUsuario(login, atributo);
     }
 
     /**
-     * Edita um atributo do perfil do usuário logado.
+     * Modifica um atributo do perfil do usuário logado.
      *
      * @param idSessao ID da sessão ativa
-     * @param atributo Nome do atributo a ser modificado
-     * @param valor Novo valor para o atributo
-     * @throws UsuarioNaoEncontradoException Se a sessão for inválida
+     * @param atributo nome do atributo
+     * @param valor    novo valor
+     * @throws UsuarioNaoEncontradoException se sessão inválida
      */
     public void editarPerfil(String idSessao, String atributo, String valor) {
         sistema.editarPerfil(idSessao, atributo, valor);
     }
 
     /**
-     * Adiciona um usuário como amigo, enviando ou confirmando um convite.
+     * Inicia ou confirma amizade entre usuários.
      *
-     * @param idSessao ID da sessão do usuário solicitante
-     * @param amigoLogin Login do usuário a ser adicionado como amigo
-     * @throws AutoAmizadeException Se o usuário tentar adicionar a si mesmo
-     * @throws UsuarioNaoEncontradoException Se o amigo não existir
-     * @throws AmigoJaAdicionadoException Se já existir amizade ou convite pendente
+     * @param idSessao    ID da sessão solicitante
+     * @param amigoLogin  login do usuário a adicionar
+     * @throws AutoAmizadeException        se adicionar a si mesmo
+     * @throws UsuarioNaoEncontradoException se amigo não existir
+     * @throws AmigoJaAdicionadoException  se já houver amizade
      */
     public void adicionarAmigo(String idSessao, String amigoLogin) {
         sistema.adicionarAmigo(idSessao, amigoLogin);
     }
 
     /**
-     * Verifica se dois usuários são amigos mútuos.
+     * Verifica amizade mútua entre dois usuários.
      *
-     * @param login1 Login do primeiro usuário
-     * @param login2 Login do segundo usuário
-     * @return true se os usuários forem amigos mútuos, false caso contrário
-     * @throws UsuarioNaoEncontradoException Se algum usuário não existir
+     * @param login1 login do primeiro usuário
+     * @param login2 login do segundo usuário
+     * @return true se amigos, false caso contrário
+     * @throws UsuarioNaoEncontradoException se algum usuário não existir
      */
     public boolean ehAmigo(String login1, String login2) {
         return sistema.ehAmigo(login1, login2);
     }
 
     /**
-     * Lista os amigos de um usuário.
+     * Lista amigos de um usuário.
      *
-     * @param login Login do usuário
-     * @return String formatada com a lista de amigos no formato "{amigo1,amigo2}"
-     * @throws UsuarioNaoEncontradoException Se o usuário não existir
+     * @param login login do usuário
+     * @return string "{amigo1,amigo2,...}"
      */
     public String getAmigos(String login) {
         return sistema.getAmigos(login);
     }
 
     /**
-     * Envia um recado para outro usuário.
+     * Envia recado a outro usuário.
      *
-     * @param idSessao ID da sessão do remetente
-     * @param destinatario Login do usuário destinatário
-     * @param mensagem Conteúdo do recado
-     * @throws AutoMensagemException Se o remetente for o mesmo que o destinatário
-     * @throws UsuarioNaoEncontradoException Se o destinatário não existir
+     * @param idSessao    ID da sessão do remetente
+     * @param destinatario login do destinatário
+     * @param mensagem     conteúdo do recado
+     * @throws AutoMensagemException       se enviar para si mesmo
+     * @throws UsuarioNaoEncontradoException se destinatário não existir
      */
     public void enviarRecado(String idSessao, String destinatario, String mensagem) {
         sistema.enviarRecado(idSessao, destinatario, mensagem);
     }
 
-
-    // Adicione estes métodos na classe Facade
+    /**
+     * Lê próximo recado disponível.
+     *
+     * @param idSessao ID da sessão do usuário
+     * @return conteúdo do recado
+     * @throws SemRecadosException         se não houver recados
+     * @throws UsuarioNaoEncontradoException se sessão inválida
+     */
+    public String lerRecado(String idSessao) {
+        return sistema.lerRecado(idSessao);
+    }
 
     /**
-     * Adiciona um usuário a uma comunidade
+     * Cria comunidade e registra criador como membro inicial.
+     *
+     * @param sessao    ID da sessão do usuário
+     * @param nome      nome único da comunidade
+     * @param descricao descrição funcional
+     * @throws ComunidadeJaExisteException    se existir nome duplicado
+     * @throws UsuarioNaoEncontradoException  se sessão inválida
+     */
+    public void criarComunidade(String sessao, String nome, String descricao) {
+        sistema.criarComunidade(sessao, nome, descricao);
+    }
+
+    /**
+     * Adiciona usuário a comunidade existente.
+     *
      * @param sessao ID da sessão do usuário
-     * @param nome Nome da comunidade
-     * @throws ComunidadeNaoEncontradaException Se a comunidade não existir
-     * @throws UsuarioJaMembroException Se o usuário já for membro
+     * @param nome   nome da comunidade
+     * @throws ComunidadeNaoEncontradaException se comunidade não existir
+     * @throws UsuarioJaMembroException        se já membro
      */
     public void adicionarComunidade(String sessao, String nome) {
         sistema.adicionarComunidade(sessao, nome);
     }
 
     /**
-     * Lista as comunidades de um usuário
-     * @param login Login do usuário
-     * @return String formatada com lista de comunidades
+     * Lista comunidades de um usuário.
+     *
+     * @param login login do usuário
+     * @return string "{comun1,comun2,...}"
      */
     public String getComunidades(String login) {
         return sistema.getComunidades(login);
     }
 
     /**
-     * Lista membros de uma comunidade
-     * @param nome Nome da comunidade
-     * @return String formatada com lista de membros
+     * Lista membros de comunidade.
+     *
+     * @param nome nome da comunidade
+     * @return string "{membro1,membro2,...}"
      */
     public String getMembrosComunidade(String nome) {
         return sistema.getMembrosComunidade(nome);
     }
 
     /**
-     * Lê o próximo recado não lido do usuário logado.
+     * Obtém descrição de comunidade.
      *
-     * @param idSessao ID da sessão ativa
-     * @return Conteúdo do recado
-     * @throws SemRecadosException Se não houver recados disponíveis
-     * @throws UsuarioNaoEncontradoException Se a sessão for inválida
+     * @param nome nome da comunidade
+     * @return texto descritivo
      */
-    public String lerRecado(String idSessao) {
-        return sistema.lerRecado(idSessao);
-    }
-
-
-    // Métodos para US5
-    public void criarComunidade(String sessao, String nome, String descricao) {
-        sistema.criarComunidade(sessao, nome, descricao);
-    }
-
     public String getDescricaoComunidade(String nome) {
         return sistema.getDescricaoComunidade(nome);
     }
 
+    /**
+     * Obtém login do dono da comunidade.
+     *
+     * @param nome nome da comunidade
+     * @return login do proprietário
+     */
     public String getDonoComunidade(String nome) {
         return sistema.getDonoComunidade(nome);
     }
 
+    /**
+     * Envia mensagem a todos os membros de comunidade.
+     *
+     * @param id       ID da sessão do remetente
+     * @param comunidade nome da comunidade
+     * @param mensagem    texto da mensagem
+     */
+    public void enviarMensagem(String id, String comunidade, String mensagem) {
+        sistema.enviarMensagem(id, comunidade, mensagem);
+    }
 
     /**
-     * Reinicia o sistema, removendo todos os usuários e sessões.
+     * Lê próxima mensagem de comunidade.
+     *
+     * @param id ID da sessão do usuário
+     * @return texto da mensagem
+     */
+    public String lerMensagem(String id) {
+        return sistema.lerMensagem(id);
+    }
+
+    /**
+     * Adiciona ídolo (fã) ao usuário.
+     *
+     * @param sessao ID da sessão
+     * @param idolo  login do ídolo
+     */
+    public void adicionarIdolo(String sessao, String idolo) {
+        sistema.adicionarIdolo(sessao, idolo);
+    }
+
+    /**
+     * Adiciona paquera (privado) ao usuário.
+     *
+     * @param sessao  ID da sessão
+     * @param paquera login da paquera
+     */
+    public void adicionarPaquera(String sessao, String paquera) {
+        sistema.adicionarPaquera(sessao, paquera);
+    }
+
+    /**
+     * Verifica relação fã-ídolo.
+     *
+     * @param login login do fã
+     * @param idolo login do ídolo
+     * @return true se for fã
+     */
+    public boolean ehFa(String login, String idolo) {
+        return sistema.ehFa(login, idolo);
+    }
+
+    /**
+     * Retorna lista de fãs.
+     *
+     * @param login login do usuário
+     * @return string "{fa1,fa2,...}"
+     */
+    public String getFas(String login) {
+        return sistema.getFas(login);
+    }
+
+    /**
+     * Verifica relação de paquera.
+     *
+     * @param sessao  ID da sessão
+     * @param paquera login da paquera
+     * @return true se existir relação
+     */
+    public boolean ehPaquera(String sessao, String paquera) {
+        return sistema.ehPaquera(sessao, paquera);
+    }
+
+    /**
+     * Retorna lista de paqueras.
+     *
+     * @param sessao ID da sessão
+     * @return string "{p1,p2,...}"
+     */
+    public String getPaqueras(String sessao) {
+        return sistema.getPaqueras(sessao);
+    }
+
+    /**
+     * Marca usuário como inimigo.
+     *
+     * @param sessao  ID da sessão
+     * @param inimigo login do inimigo
+     */
+    public void adicionarInimigo(String sessao, String inimigo) {
+        sistema.adicionarInimigo(sessao, inimigo);
+    }
+
+    /**
+     * Remove usuário do sistema, limpando todas referências.
+     *
+     * @param idSessao ID da sessão do usuário a remover
+     */
+    public void removerUsuario(String idSessao) {
+        sistema.removerUsuario(idSessao);
+    }
+
+    /**
+     * Reinicia todos os dados do sistema.
      */
     public void zerarSistema() {
         sistema.zerar();
     }
 
     /**
-     * Encerra o sistema, salvando os dados persistentes.
+     * Encerra o sistema, salvando o estado atual em disco.
      */
     public void encerrarSistema() {
         salvarDados();
     }
 
-    // Métodos auxiliares de persistência
+    /**
+     * Persistência: salva estado em arquivo.
+     */
     private void salvarDados() {
         try {
             sistema.salvarEstado(ARQUIVO_DADOS);
@@ -201,56 +327,16 @@ public class Facade {
         }
     }
 
+    /**
+     * Persistência: carrega estado de arquivo, ou cria sistema novo.
+     */
     private void carregarDados() {
         try {
             sistema = Jackute.carregarEstado(ARQUIVO_DADOS);
         } catch (FileNotFoundException e) {
-            sistema = new Jackute(); // Recria se arquivo não existe
+            sistema = new Jackute();
         } catch (IOException | ClassNotFoundException e) {
             throw new PersistenciaException();
         }
     }
-
-    public void enviarMensagem(String id, String comunidade, String mensagem) {
-        sistema.enviarMensagem(id, comunidade, mensagem);
-    }
-
-    public String lerMensagem(String id) {
-        return sistema.lerMensagem(id);
-    }
-
-    // Métodos para novas relações
-    public void adicionarIdolo(String sessao, String idolo) {
-        sistema.adicionarIdolo(sessao, idolo);
-    }
-
-    public void adicionarPaquera(String sessao, String paquera) {
-        sistema.adicionarPaquera(sessao, paquera);
-    }
-
-    public boolean ehFa(String login, String idolo) {
-        return sistema.ehFa(login, idolo);
-    }
-
-    public String getFas(String login) {
-        return sistema.getFas(login);
-    }
-
-    public boolean ehPaquera(String sessao, String paquera) {
-        return sistema.ehPaquera(sessao, paquera);
-    }
-
-    public String getPaqueras(String sessao) {
-        return sistema.getPaqueras(sessao);
-    }
-
-    public void adicionarInimigo(String sessao, String inimigo) {
-        sistema.adicionarInimigo(sessao, inimigo);
-    }
-
-
-    public void removerUsuario(String idSessao) {
-        sistema.removerUsuario(idSessao);
-    }
-
 }
